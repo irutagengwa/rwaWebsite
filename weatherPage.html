@@ -9,7 +9,7 @@
 <body>
 
     <!-- Image Background -->
-    <img id="image-background" src="Images/sunny.jpg" alt="Weather Background">
+    <img id="image-background" src="sunny.jpg" alt="Weather Background">
 
     <!-- Header -->
     <div class="header">
@@ -18,7 +18,7 @@
         </div>
         <a href="index.html" id="home-icon">
             <div class="logo-container">
-                <img src="Images/motocycle.png" alt="Home">
+                <img src="motocycle.png" alt="Home">
             </div>
         </a>
     </div>
@@ -29,9 +29,9 @@
 
         <!-- Navigation Icons -->
         <div id="nav-icons">
-            <a href="infoPage.html"><img src="Images/info.png" alt="Info"></a>
-            <a href="Save.html"><img src="Images/diskette2.png" alt="Save"></a>
-            <a href="weatherPage.html"><img src="Images/cloudy2.png" alt="Weather"></a>
+            <a href="infoPage.html"><img src="info.png" alt="Info"></a>
+            <a href="Save.html"><img src="diskette2.png" alt="Save"></a>
+            <a href="weatherPage.html"><img src="cloudy2.png" alt="Weather"></a>
         </div>
 
         <!-- Search Box -->
@@ -95,11 +95,11 @@
 
                 let imageBackground = document.getElementById("image-background");
                 if (icon.includes("clear")) {
-                    imageBackground.src = "Images/sunny.jpg";
+                    imageBackground.src = "sunny.jpg";
                 } else if (icon.includes("rain")) {
-                    imageBackground.src = "Images/rain.jpg";
+                    imageBackground.src = "rain.jpg";
                 } else if (icon.includes("cloud")) {
-                    imageBackground.src = "Images/cloudy.jpg";
+                    imageBackground.src = "cloudy.jpg";
                 }
             } 
             catch (error) {
