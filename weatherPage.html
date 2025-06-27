@@ -7,10 +7,6 @@
     <link rel="stylesheet" href="stylesWeather.css">
 </head>
 <body>
-
-    <!-- Image Background -->
-    <img id="image-background" src="sunny.jpg" alt="Weather Background">
-
     <!-- Header -->
     <div class="header">
         <div class="title">
@@ -48,8 +44,12 @@
             <p id="condition">--</p>
         </div>
     </div>
-<script>
-    const API_KEY = "8024dc9e47bac8a13b169e20263563c6"; 
+
+    <!-- Image Background -->
+    <img id="image-background" src="sunny.jpg" alt="Weather Background">
+
+    <script>
+        const API_KEY = "8024dc9e47bac8a13b169e20263563c6"; 
         
         function loadGoogleMapsAPI(callback) {
             let script = document.createElement("script");
@@ -113,7 +113,5 @@
             loadGoogleMapsAPI(initAutocomplete);
         };
     </script>
-    
-
 </body>
 </html>
