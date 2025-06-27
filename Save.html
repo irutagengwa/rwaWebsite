@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rwa Moto - Saved Routes</title>
+    <link rel="stylesheet" href="saveStyles.css">
+</head>
+<body>
+    <div class="container">
+<div class="header">
+    <div class="header-top">
+        <div class="title-section">
+    <a href="index.html" class="title-link">Rwa Moto</a>
+    <a href="index.html">
+        <img src="Images/motocycle.png" alt="Motorcycle" class="title-icon">
+    </a>
+</div>
+        <div id="nav-icons">
+  <a href="infoPage.html"><img src="Images/info.png" alt="Info"></a>
+  <a href="Save.html"><img src="Images/diskette2.png" alt="Save"></a>
+  <a href="weatherPage.html"><img src="Images/cloudy2.png" alt="Weather"></a>
+    </div>
+
+    </div>
+    <button class="clear-all-btn" onclick="clearAllRoutes()">Clear All</button>
+</div>
+
+        <div class="saved-routes" id="saved-routes">
+            <!-- Saved routes will be displayed here -->
+        </div>
+
+        <div class="no-routes" id="no-routes" style="display: none;">
+            No saved routes yet. Save a route from the calculator to see it here!
+        </div>
+    </div>
+
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        function parsePrice(priceParam) {
+            if (priceParam && priceParam !== '') {
+                return parseInt(priceParam) || 0;
+            }
+            return 0;
+        }
+
+        function loadSavedRoutes() {
+            const savedRoutes = JSON.parse(localStorage.getItem('savedRoutes') || '[]');
+            const container = document.getElementById('saved-routes');
+            const noRoutesMsg = document.getElementById('no-routes');
+
+            container.innerHTML = '';
+
+            if (savedRoutes.length === 0) {
+                noRoutesMsg.style.display = 'block';
+                return;
+            } else {
+                noRoutesMsg.style.display = 'none';
+            }
+
+            savedRoutes.forEach((route, index) => {
+                const routeCard = createRouteCard(route, index);
+                container.appendChild(routeCard);
+            });
+        }
+
+        function createRouteCard(route, index) {
+            const card = document.createElement('div');
+            card.className = 'route-card';
+            card.innerHTML = `
+                <button class="delete-btn" onclick="deleteRoute(${index})" title="Delete Route">×</button>
+                <div class="route-title">${route.from} → ${route.to}</div>
+                <div class="route-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Price:</div>
+                        <div class="detail-value">${route.price} RWF</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Distance:</div>
+                        <div class="detail-value">${route.distance}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Time:</div>
+                        <div class="detail-value">${route.time}</div>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function saveRoute(from, to, distance, time, price) {
+            const savedRoutes = JSON.parse(localStorage.getItem('savedRoutes') || '[]');
+
+            const newRoute = {
+                from: from,
+                to: to,
+                distance: distance,
+                time: time,
+                price: price,
+                savedAt: new Date().toISOString()
+            };
+
+            const existingRoute = savedRoutes.find(route =>
+                route.from === from && route.to === to
+            );
+
+            if (!existingRoute) {
+                savedRoutes.push(newRoute);
+                localStorage.setItem('savedRoutes', JSON.stringify(savedRoutes));
+
+                const container = document.getElementById('saved-routes');
+                const noRoutesMsg = document.getElementById('no-routes');
+                noRoutesMsg.style.display = 'none';
+
+                const routeCard = createRouteCard(newRoute, savedRoutes.length - 1);
+                routeCard.classList.add('new-route');
+                container.appendChild(routeCard);
+
+                setTimeout(() => {
+                    loadSavedRoutes();
+                }, 500);
+            }
+        }
+
+        function deleteRoute(index) {
+            if (confirm('Are you sure you want to delete this route?')) {
+                const savedRoutes = JSON.parse(localStorage.getItem('savedRoutes') || '[]');
+                savedRoutes.splice(index, 1);
+                localStorage.setItem('savedRoutes', JSON.stringify(savedRoutes));
+                loadSavedRoutes();
+            }
+        }
+
+        function clearAllRoutes() {
+            if (confirm('Are you sure you want to clear all saved routes?')) {
+                localStorage.removeItem('savedRoutes');
+                loadSavedRoutes();
+            }
+        }
+
+        function truncateLocationName(text, maxLength = 12) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength - 3) + '...';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const from = getUrlParameter('from');
+            const to = getUrlParameter('to');
+            const distance = getUrlParameter('distance');
+            const time = getUrlParameter('time');
+            const price = getUrlParameter('price');
+
+            if (from && to && from !== 'None' && to !== 'None') {
+                const actualPrice = parsePrice(price);
+                saveRoute(
+                    truncateLocationName(from),
+                    truncateLocationName(to),
+                    distance || '0 km',
+                    time || '0 min',
+                    actualPrice
+                );
+            }
+
+            loadSavedRoutes();
+        });
+    </script>
+</body>
+</html>

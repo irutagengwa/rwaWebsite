@@ -1,0 +1,251 @@
+* 
+{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+
+}
+body {
+font-family: Poppins, sans-serif;
+
+min-height: 100vh;
+min-height: 100vh;
+    background-image: url(Images/info2.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+        /* Header Bar Stuff */
+          .header 
+          {
+        max-width: 1200px;
+        margin: 2% auto;
+        padding: 10px;
+        padding-top: 5px;
+        background-color: #1F7A56;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-radius: 20px;
+  
+        }
+          .header-top 
+        {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 2%;
+        padding-right: 4%;
+
+        border-radius: 50%;
+        }
+          .title
+        {
+        color: black;
+        margin-left: 15px;
+        font-size: 40px;
+        font-family: Poppins, sans-serif;
+        font-weight: 400;
+        word-wrap: break-word;
+        text-decoration: none;
+        
+        }
+        /* Nav Icons */
+#nav-icons 
+{
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+  
+}
+
+#nav-icons a {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #249668;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  border: 1px solid #111010;
+  padding: 3px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#nav-icons img {
+  width: 41px;
+  height: 41px;
+}
+ 
+#nav-icons a:hover
+{
+    transform: translateY(-2px);
+}
+ 
+
+        .title-icon 
+        {
+        width: 90px;
+        height: 90px;
+        flex-shrink: 0;
+        vertical-align: middle;
+        }
+          .title-link 
+      {
+    color: black;
+    text-decoration: none;
+    font-size: 40px;
+    font-family: Poppins, sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;
+    }
+.title-link:visited,
+.title-link:active,
+
+.title-link:hover 
+{
+    color: black;
+    text-decoration: none;
+}
+
+        /* end of header css information */
+
+
+
+
+    /* first container information */ 
+    .container
+    {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    }
+    .contact-form {
+    background-color: #1F7A56;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+    }
+    .form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    }
+    .form-group {
+    flex: 1;
+    }
+    .form-input {
+    width: 100%;
+    padding: 15px 20px;
+    background-color: #e8e8e8;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    }
+    .form-input::placeholder
+    {
+    color: #000;
+    }
+    .message-input {
+    width: 100%;
+    padding: 20px;
+    background-color: #e8e8e8;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    min-height: 120px;
+    resize: vertical;
+    font-family: inherit;
+    margin-bottom: 30px;
+    }
+    .message-input::placeholder
+    {
+    font-weight: 500;
+    color: #249668
+    }
+    .send-button {
+    background-color: #249668;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    }
+    .send-button:hover {
+    background-color: #249668;
+    transform: translateY(-2px);
+    }
+    .success-message {
+    display: none;
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #c3e6cb;
+    }
+
+    /* Container infor */ 
+
+  /* info box */
+.content-section {
+display: flex;
+gap: 40px;
+margin-top: 40px;
+}
+.info-box {
+flex: 1;
+background-color: #1F7A56;
+padding: 30px;
+border-radius: 20px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.info-box h2 {
+font-size: 24px;
+font-weight: bold;
+margin-bottom: 20px;
+color: #333;
+}
+.info-text {
+line-height: 1.6;
+color: whitesmoke;
+font-size: 16px;
+}
+    /*end of info box info */ 
+
+    /* Background Image */ 
+ .element
+ {
+    background-image: url(Images/infoBack.jpg);
+     background-repeat: no-repeat;
+    background-position: center;
+    background-size:cover;
+ }
+
+
+@media (max-width: 768px) {
+.header-top {
+flex-direction: column;
+align-items: center;
+gap: 10px;
+}
+.logo {
+font-size: 24px;
+}
+.form-row {
+flex-direction: column;
+gap: 15px;
+}
+.content-section {
+flex-direction: column;
+gap: 20px;
+}
+.contact-form, .info-box {
+padding: 20px;
+}
+}

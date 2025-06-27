@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rwamoto</title>
+    <link rel="stylesheet" href="stylesWeather.css">
+</head>
+<body>
+
+    <!-- Video Background -->
+    <video id="video-background" autoplay muted loop>
+        <source src="Images/sunny.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="title">
+            <a href="index.html">Rwa Moto</a>
+        </div>
+        <a href="index.html" id="home-icon">
+            <div class="logo-container">
+                <img src="Images/motocycle.png" alt="Home">
+            </div>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Current Rwanda Weather</h1>
+
+        <!-- Navigation Icons -->
+        <div id="nav-icons">
+            <a href="infoPage.html"><img src="Images/info.png" alt="Info"></a>
+            <a href="Save.html"><img src="Images/diskette2.png" alt="Save"></a>
+            <a href="weatherPage.html"><img src="Images/cloudy2.png" alt="Weather"></a>
+        </div>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" id="cityInput" placeholder="Enter Rwandan city">
+            <button onclick="fetchWeather()">Search</button>
+        </div>
+
+        <!-- Weather Info -->
+        <div class="weather-card">
+            <div id="weather-icon">☀️</div>
+            <h2 id="cityName">Kigali</h2>
+            <p id="temperature">--°C</p>
+            <p id="condition">--</p>
+        </div>
+    </div>
+<script>
+    const API_KEY = "8024dc9e47bac8a13b169e20263563c6"; // Replace with your OpenWeatherMap API Key
+        
+        function loadGoogleMapsAPI(callback) {
+            let script = document.createElement("script");
+            script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCxhIOSwfJxJe7mqIMObnIcc6373LG5-zs&libraries=places`;
+            script.async = true;
+            script.defer = true;
+            script.onload = callback;
+            document.head.appendChild(script);
+        }
+
+        function initAutocomplete() {
+            let input = document.getElementById("cityInput");
+            let options = { types: ["(cities)"] };
+            new google.maps.places.Autocomplete(input, options);
+        }
+
+        async function fetchWeather() {
+            let city = document.getElementById("cityInput").value || "Kigali";
+
+            console.log("City entered:", city);
+
+            let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`;
+
+            try {
+                let response = await fetch(url);
+                let data = await response.json();
+                console.log(data);
+
+                if (data.cod !== 200) {
+                    alert("City not found. Please enter a valid city name.");
+                    return;
+                }
+
+                document.getElementById("cityName").innerText = `City: ${data.name}`;
+                document.getElementById("temperature").innerText = `Temperature: ${data.main.temp}°C`;
+                document.getElementById("condition").innerText = `Condition: ${data.weather[0].description}`;
+
+                let icon = data.weather[0].main.toLowerCase();
+                let weatherIcon = icon.includes("clear") ? "☀️" :
+                                 icon.includes("rain") ? "🌧️" :
+                                 icon.includes("cloud") ? "☁️" : "❓";
+                document.getElementById("weather-icon").innerText = weatherIcon;
+
+                let videoBackground = document.getElementById("video-background");
+                if (icon.includes("clear")) {
+                    videoBackground.src = "Images/Sunny.mp4";
+                } else if (icon.includes("rain")) {
+                    videoBackground.src = "Images/rain.mp4";
+                } else if (icon.includes("cloud")) {
+                    videoBackground.src = "Images/cloudy.mp4";
+                }
+            } 
+            catch (error) {
+                console.error("Error fetching weather:", error);
+                alert("Error fetching weather data. Try again later.");
+            }
+        }
+
+        window.onload = function() {
+            fetchWeather();
+            loadGoogleMapsAPI(initAutocomplete);
+        };
+    </script>
+    
+
+</body>
+</html>

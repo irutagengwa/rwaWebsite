@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rwa Moto - Contact</title>
+    <link rel="stylesheet" href="infoStyle.css">
+</head>
+<body>
+ <div class="header">
+    <div class="header-top">
+ <div class="title-section">
+<div class="title">
+    <a href="index.html" class="title-link">Rwa Moto</a>
+    <a href="index.html">
+        <img src="Images/motocycle.png" alt="Motorcycle" class="title-icon">
+    </a>
+</div>
+</div>
+        <div id="nav-icons">
+  <a href="infoPage.html"><img src="Images/info.png" alt="Info"></a>
+  <a href="Save.html"><img src="Images/diskette2.png" alt="Save"></a>
+  <a href="weatherPage.html"><img src="Images/cloudy2.png" alt="Weather"></a>
+    </div>
+
+    </div>
+
+    
+</div>
+
+    <div class="container">
+        <div class="contact-form">
+            <div class="success-message" id="successMessage">
+                Message sent successfully! We'll get back to you soon.
+            </div>
+            
+            <form id="contactForm" action="https://formspree.io/f/xwpbrgpv" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" name="name" class="form-input" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-input" placeholder="Email" required>
+                    </div>
+                </div>
+                
+                <textarea name="message" class="message-input" placeholder="Write a Message for support or to contact the owner." required></textarea>
+                
+                <button type="submit" class="send-button">Send</button>
+            </form>
+        </div>
+
+        <div class="content-section">
+            <div class="info-box">
+                <h2>How calculations are made ?</h2>
+                <div class="info-text">
+                    1. Distance Calculation: The website measures the trip distance and then time—to see if the use of motorcycles is best, to begin with on a moto—using Google’s Map API distance and time. This gives a reliable estimate of how far the trip is. <br><br>
+
+2. Local Fare Structure: A base fare plus a per-kilometer rate is applied to the distance. These rates are based on typical Moto fares in Rwanda that have been gathered through research, personal experience, and ongoing local input. <br><br>
+
+3. Estimated Price Range: Due to Moto fares varying a lot depending on traffic, driver negotiation, time of day, etc., RwaMoto shows a range (e.g., 800 RWF – 1200 RWF) rather than a fixed price. This prepares the user to negotiate confidently while still avoiding overcharges. <br><br>
+
+All estimates are grounded in local knowledge and updated regularly for accuracy. Feel free to use the contact box above for any inquiries or disputes regarding accuracy.
+
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h2>Purpose</h2>
+                <div class="info-text">
+                    &nbsp; The RwaMoto Projects website is a student-led initiative designed to assist tourists and newcomers in Rwanda in navigating the country through the wide use of Moto-taxi. One of the biggest challenges that visitors and newcomers face is not knowing the fair pricing of motorcycle rides, which often leads to overcharging or confusion. Although the Rwandan government has already put efforts to stop this by giving riders fare phones, most motorcycles do not use them in chances of getting more money. RwaMoto addresses this by offering a simple and transparent solution to estimate appropriate Moto fares based on distance and location.<br><br>
+
+                    &nbsp; This project was fully designed and coded by Ian Rutagengwa, a high school student in Rwanda, as part of a border effort to use technology to make life easier for both locals and visitors and blend local knowledge with practical tech skills. Please feel free to use the contact box above for any inquiries.
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Submit to Formspree
+            fetch('https://formspree.io/f/xwpbrgpv', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // Show success message
+                    document.getElementById('successMessage').style.display = 'block';
+                    
+                    // Reset form
+                    this.reset();
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        document.getElementById('successMessage').style.display = 'none';
+                    }, 5000);
+                } else {
+                    response.json().then(data => {
+                        if (Object.hasOwnProperty.call(data, 'errors')) {
+                            alert('Error: ' + data["errors"].map(error => error["message"]).join(", "));
+                        } else {
+                            alert('Oops! There was a problem submitting your form');
+                        }
+                    })
+                }
+            }).catch(error => {
+                alert('Oops! There was a problem submitting your form');
+            });
+        });
+
+        // Add hover effects to navigation icons
+        document.querySelectorAll('.nav-icon').forEach(icon => {
+            icon.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            icon.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+    </script>
+</body>
+</html>

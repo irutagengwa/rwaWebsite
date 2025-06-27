@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="Images/motocycle.png">
+    <title>Rwamoto</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxhIOSwfJxJe7mqIMObnIcc6373LG5-zs&libraries=places&callback=initMap" async defer></script>
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- Navigation Icons -->
+    <div id="nav-icons">
+        <a href="infoPage.html"><img src="Images/info.png" alt="Info"></a>
+        <a href="Save.html"><img src="Images/diskette2.png" alt="Save"></a>
+        <a href="weatherPage.html"><img src="Images/cloudy2.png" alt="Weather"></a>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="container">
+   <div class="header">
+    <a href="index.html" class="title-link">
+        <div class="title">Rwa Moto</div>
+    </a>
+    <a href="index.html" id="home-icon">
+        <img src="Images/motocycle.png" alt="Home">
+    </a>
+</div>
+
+      <!-- Moto picture-->
+    <img style="width: 50%; height: 50%; margin-left: auto; margin-right: auto; display: block;" src="Images/motocycle.png" />
+
+    <!-- Additional information -->
+    <div class="Trip-Info" id="trip-info">-------</div>
+
+   <!-- From and To information -->
+<div class="location-pair">
+    <div class="LocationWhite">From:</div>
+    <div class="LocationGreen" id="origin-display">None Selected</div>
+</div>
+
+<div class="location-pair">
+    <div class="LocationWhite">To:</div>
+    <div class="LocationGreen" id="destination-display">None Selected</div>
+</div>
+
+<!-- Save and New Location Button -->
+<button class="button" id="save-btn">Save</button>
+<a href="index.html" class="buttonNew" id="new-location-btn">New Location</a>
+
+</div>
+
+
+
+<script>
+let map;
+let currentRouteData = null;
+
+function initMap() {
+    const rwandaCenter = { lat: -1.9403, lng: 29.8739 };
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: rwandaCenter,
+        zoom: 8,
+        disableDefaultUI: true,
+    });
+    displayLocations();
+}
+
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    const results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+function truncateLocationName(text, maxLength = 15) {
+    return text.length <= maxLength ? text : text.substring(0, maxLength - 3) + '...';
+}
+
+// Updated fare calculation function matching your table
+function calculatePriceRange(distanceText) {
+    const distanceNum = parseFloat(distanceText.replace(/[^\d.]/g, '')) || 0;
+    const baseFare = 500;
+    const perKmRate = 200;
+    const estimated = baseFare + distanceNum * perKmRate;
+    const min = Math.round(estimated * 0.85);
+    const max = Math.round(estimated * 1.15);
+    return { min, max };
+}
+
+function displayLocations() {
+    let origin = getUrlParameter('from');
+    let destination = getUrlParameter('to');
+
+    const hasValidLocations = origin && destination && origin !== 'None' && destination !== 'None';
+
+    if (!origin) origin = 'None';
+    if (!destination) destination = 'None';
+
+    const originDisplay = document.getElementById('origin-display');
+    const destinationDisplay = document.getElementById('destination-display');
+
+    if (originDisplay) {
+        originDisplay.textContent = truncateLocationName(origin);
+        originDisplay.title = origin;
+        originDisplay.setAttribute('data-full-name', origin);
+    }
+
+    if (destinationDisplay) {
+        destinationDisplay.textContent = truncateLocationName(destination);
+        destinationDisplay.title = destination;
+        destinationDisplay.setAttribute('data-full-name', destination);
+    }
+
+    if (map && hasValidLocations) {
+        addMarkersAndRoute(origin, destination);
+    }
+}
+
+function createRouteInfoOverlay(time, distance, position, priceRange) {
+    if (window.routeInfoOverlay) {
+        window.routeInfoOverlay.setMap(null);
+    }
+
+    class RouteInfoOverlay extends google.maps.OverlayView {
+        constructor(position, time, distance, priceRange) {
+            super();
+            this.position = position;
+            this.time = time;
+            this.distance = distance;
+            this.priceRange = priceRange;
+            this.div = null;
+        }
+
+        onAdd() {
+            const div = document.createElement('div');
+            div.className = 'route-info-overlay';
+            div.innerHTML = `
+                <span>${this.time}</span>
+                <span>${this.distance}</span>
+                <span>${this.priceRange.min} – ${this.priceRange.max} RWF</span>
+            `;
+            this.div = div;
+            const panes = this.getPanes();
+            panes.overlayLayer.appendChild(div);
+        }
+
+        draw() {
+            const overlayProjection = this.getProjection();
+            const position = overlayProjection.fromLatLngToDivPixel(this.position);
+            if (position) {
+                this.div.style.left = position.x + 'px';
+                this.div.style.top = position.y + 'px';
+            }
+        }
+
+        onRemove() {
+            if (this.div) {
+                this.div.parentNode.removeChild(this.div);
+                this.div = null;
+            }
+        }
+    }
+
+    window.routeInfoOverlay = new RouteInfoOverlay(position, time, distance, priceRange);
+    window.routeInfoOverlay.setMap(map);
+}
+
+function addMarkersAndRoute(origin, destination) {
+    if (!origin || !destination || origin === 'None' || destination === 'None') return;
+
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer({
+        suppressMarkers: false,
+        draggable: false
+    });
+
+    directionsRenderer.setMap(map);
+
+    directionsService.route({
+        origin: origin + ', Rwanda',
+        destination: destination + ', Rwanda',
+        travelMode: google.maps.TravelMode.DRIVING
+    }, (response, status) => {
+        if (status === 'OK') {
+            directionsRenderer.setDirections(response);
+
+            const route = response.routes[0];
+            const leg = route.legs[0];
+
+            const distance = leg.distance.text;
+            const drivingDuration = leg.duration.value;
+            const motorcycleDuration = Math.round(drivingDuration * 0.85);
+            const motorcycleTime = formatDuration(motorcycleDuration);
+
+            const priceRange = calculatePriceRange(distance);
+
+            currentRouteData = {
+                from: origin,
+                to: destination,
+                distance: distance,
+                time: motorcycleTime,
+                price: `${priceRange.min} – ${priceRange.max}`
+            };
+
+            const tripInfo = document.getElementById('trip-info');
+            if (tripInfo) {
+                tripInfo.textContent = `${priceRange.min} – ${priceRange.max} RWF`;
+            }
+
+            const path = route.overview_path;
+            const midIndex = Math.floor(path.length / 2);
+            const midPoint = path[midIndex];
+
+            createRouteInfoOverlay(motorcycleTime, distance, midPoint, priceRange);
+
+        } else {
+            console.error('Directions request failed due to ' + status);
+            const tripInfo = document.getElementById('trip-info');
+            if (tripInfo) {
+                tripInfo.textContent = 'RWF Service unavailable';
+            }
+        }
+    });
+}
+
+function formatDuration(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return hours > 0 ? `${hours}h ${minutes}m` : `${minutes} min`;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const saveBtn = document.getElementById('save-btn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+            const originDisplay = document.getElementById('origin-display');
+            const destinationDisplay = document.getElementById('destination-display');
+
+            const origin = originDisplay ? originDisplay.getAttribute('data-full-name') || originDisplay.textContent : 'None';
+            const destination = destinationDisplay ? destinationDisplay.getAttribute('data-full-name') || destinationDisplay.textContent : 'None';
+
+            if (origin === 'None' || destination === 'None') {
+                alert('No valid route to save. Please select locations first.');
+                return;
+            }
+
+            if (currentRouteData) {
+                alert(`Route saved: ${origin} to ${destination}`);
+                const params = new URLSearchParams({
+                    from: currentRouteData.from,
+                    to: currentRouteData.to,
+                    distance: currentRouteData.distance,
+                    time: currentRouteData.time,
+                    price: currentRouteData.price
+                });
+                window.location.href = `Save.html?${params.toString()}`;
+            } else {
+                alert('Please wait for route calculation to complete before saving.');
+            }
+        });
+    }
+});
+
+window.gm_authFailure = function() {
+    console.error('Google Maps API authentication failed');
+    alert('Map services are currently unavailable. Please try again later.');
+};
+</script>
+
+</body>
+</html>

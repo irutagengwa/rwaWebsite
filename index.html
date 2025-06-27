@@ -1,0 +1,182 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="Images/motocycle.png">
+    <title>Rwamoto</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Map -->
+    <div id="map"></div>
+
+    <!-- Navigation Icons -->
+    <div id="nav-icons">
+            <a href="infoPage.html"><img src="Images/info.png" alt="Info"></a>
+            <a href="Save.html"><img src="Images/diskette2.png" alt="Save"></a>
+            <a href="weatherPage.html"><img src="Images/cloudy2.png" alt="Weather"></a>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="header">
+            <div class="title">Rwa Moto</div>
+            <a href="index.html" id="home-icon">
+                <img src="Images/motocycle.png" alt="Home">
+            </a>
+        </div>
+
+        <div class="input-group">
+            <label class="label">From:</label>
+            <div class="input-box">
+                <input type="text" id="starting-location" placeholder="Starting Location">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label class="label">To:</label>
+            <div class="input-box">
+                <input type="text" id="ending-location" placeholder="Ending Location">
+            </div>
+        </div>
+
+        <div class="distance-container">
+            <label class="dist">Distance:</label>
+            <span id="distance">0.0 KM</span>
+        </div>
+
+        <!-- Calculate Button -->
+       <button class="button" id="calculate-btn" onclick="window.location.href='Calc.html'">Calculate</button>
+    </div>
+
+    <script>
+        let map, autocompleteOrigin, autocompleteDestination;
+
+        // Initialize the map
+        function initMap() {
+            const rwandaCenter = { lat: -1.9403, lng: 29.8739 }; // Rwanda's center coordinates
+
+            // Create the map
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: rwandaCenter,
+                zoom: 8,
+                disableDefaultUI: true, // Remove default controls
+            });
+
+            // Get input elements with correct IDs
+            const inputOrigin = document.getElementById('starting-location');
+            const inputDestination = document.getElementById('ending-location');
+
+            // Initialize autocomplete for both inputs
+            autocompleteOrigin = new google.maps.places.Autocomplete(inputOrigin, {
+                componentRestrictions: { country: 'rw' }, // Restrict to Rwanda
+                fields: ['place_id', 'geometry', 'name', 'formatted_address']
+            });
+            
+            autocompleteDestination = new google.maps.places.Autocomplete(inputDestination, {
+                componentRestrictions: { country: 'rw' }, // Restrict to Rwanda
+                fields: ['place_id', 'geometry', 'name', 'formatted_address']
+            });
+
+            // Bind the autocomplete to the map bounds
+            autocompleteOrigin.bindTo('bounds', map);
+            autocompleteDestination.bindTo('bounds', map);
+
+            // Add listeners for automatic distance calculation
+            autocompleteOrigin.addListener('place_changed', calculateDistance);
+            autocompleteDestination.addListener('place_changed', calculateDistance);
+            
+            // Also add listeners for manual input changes
+            inputOrigin.addEventListener('input', debounce(calculateDistance, 500));
+            inputDestination.addEventListener('input', debounce(calculateDistance, 500));
+        }
+
+        // Debounce function to limit API calls
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Calculate Distance automatically
+        function calculateDistance() {
+            const origin = document.getElementById('starting-location').value.trim();
+            const destination = document.getElementById('ending-location').value.trim();
+
+            if (origin && destination && origin !== destination) {
+                const service = new google.maps.DistanceMatrixService();
+                service.getDistanceMatrix(
+                    {
+                        origins: [origin],
+                        destinations: [destination],
+                        travelMode: google.maps.TravelMode.DRIVING,
+                        unitSystem: google.maps.UnitSystem.METRIC,
+                        avoidHighways: false,
+                        avoidTolls: false
+                    },
+                    (response, status) => {
+                        if (status === 'OK' && response.rows[0]) {
+                            const element = response.rows[0].elements[0];
+                            if (element.status === 'OK') {
+                                const distanceText = element.distance.text;
+                                document.getElementById('distance').innerText = distanceText;
+                            } else {
+                                document.getElementById('distance').innerText = 'Route not found';
+                            }
+                        } else {
+                            console.error('Error calculating distance: ' + status);
+                            document.getElementById('distance').innerText = 'Error calculating';
+                        }
+                    }
+                );
+            } else if (origin === destination && origin) {
+                document.getElementById('distance').innerText = '0.0 km';
+            }
+        }
+
+        // Handle Calculate button click
+       // Handle Calculate button click
+// Fix the typo: daocument -> document
+document.addEventListener('DOMContentLoaded', function() {
+    const calculateBtn = document.getElementById('calculate-btn');
+    calculateBtn.addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent default button behavior
+        
+        // Get what the user actually typed
+        const origin = document.getElementById('starting-location').value.trim();
+        const destination = document.getElementById('ending-location').value.trim();
+        
+        // Check if both fields are filled
+        if (!origin || !destination) {
+            alert('Please enter both starting and ending locations before calculating.');
+            return;
+        }
+        
+        // Check if locations are different
+        if (origin === destination) {
+            alert('Starting and ending locations cannot be the same.');
+            return;
+        }
+        
+        // Send the user's locations to Calc.html page
+        const url = `Calc.html?from=${encodeURIComponent(origin)}&to=${encodeURIComponent(destination)}`;
+        window.location.href = url;
+    });
+});
+    </script>
+
+    
+
+<!-- APi COde Stuff -->
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxhIOSwfJxJe7mqIMObnIcc6373LG5-zs&libraries=places&callback=initMap" async defer></script>
+
+</body>
+</html>
