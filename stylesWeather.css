@@ -119,10 +119,18 @@ body {
 }
 
 input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: relative;
+    z-index: 1000;  /* Ensure input is above container but below dropdown */
+}
+.pac-container {
+    z-index: 1050 !important;  /* Makes sure dropdown appears above the container */
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 button {
