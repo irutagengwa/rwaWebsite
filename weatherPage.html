@@ -62,7 +62,10 @@
 
         function initAutocomplete() {
             let input = document.getElementById("cityInput");
-            let options = { types: ["(cities)"] };
+            let options = {
+                types: ['(cities)'],
+                componentRestrictions: { country: 'RW' }  // Restrict to Rwanda
+            };
             new google.maps.places.Autocomplete(input, options);
         }
 
