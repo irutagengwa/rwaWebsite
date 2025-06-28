@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,6 +9,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Mobile-only hamburger menu -->
+    <div class="mobile-only hamburger-menu">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+
+    <!-- Mobile-only side navigation -->
+    <div class="mobile-only side-nav">
+        <a href="infoPage.html"><img src="info.png" alt="Info"></a>
+        <a href="Save.html"><img src="diskette2.png" alt="Save"></a>
+        <a href="weatherPage.html"><img src="cloudy2.png" alt="Weather"></a>
+    </div>
+
     <!-- Background Map -->
     <div id="map"></div>
 
@@ -142,41 +156,54 @@
             }
         }
 
-        // Handle Calculate button click
-       // Handle Calculate button click
-// Fix the typo: daocument -> document
-document.addEventListener('DOMContentLoaded', function() {
-    const calculateBtn = document.getElementById('calculate-btn');
-    calculateBtn.addEventListener('click', function(e) {
-        e.preventDefault(); // Prevent default button behavior
-        
-        // Get what the user actually typed
-        const origin = document.getElementById('starting-location').value.trim();
-        const destination = document.getElementById('ending-location').value.trim();
-        
-        // Check if both fields are filled
-        if (!origin || !destination) {
-            alert('Please enter both starting and ending locations before calculating.');
-            return;
-        }
-        
-        // Check if locations are different
-        if (origin === destination) {
-            alert('Starting and ending locations cannot be the same.');
-            return;
-        }
-        
-        // Send the user's locations to Calc.html page
-        const url = `Calc.html?from=${encodeURIComponent(origin)}&to=${encodeURIComponent(destination)}`;
-        window.location.href = url;
-    });
-});
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            calculateBtn.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default button behavior
+                
+                // Get what the user actually typed
+                const origin = document.getElementById('starting-location').value.trim();
+                const destination = document.getElementById('ending-location').value.trim();
+                
+                // Check if both fields are filled
+                if (!origin || !destination) {
+                    alert('Please enter both starting and ending locations before calculating.');
+                    return;
+                }
+                
+                // Check if locations are different
+                if (origin === destination) {
+                    alert('Starting and ending locations cannot be the same.');
+                    return;
+                }
+                
+                // Send the user's locations to Calc.html page
+                const url = `Calc.html?from=${encodeURIComponent(origin)}&to=${encodeURIComponent(destination)}`;
+                window.location.href = url;
+            });
+        });
+
+        // Hamburger menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger-menu');
+            const sideNav = document.querySelector('.side-nav');
+
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                sideNav.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!hamburger.contains(event.target) && !sideNav.contains(event.target)) {
+                    hamburger.classList.remove('active');
+                    sideNav.classList.remove('active');
+                }
+            });
+        });
     </script>
 
-    
-
-<!-- APi COde Stuff -->
- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxhIOSwfJxJe7mqIMObnIcc6373LG5-zs&libraries=places&callback=initMap" async defer></script>
-
+    <!-- API Code Stuff -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxhIOSwfJxJe7mqIMObnIcc6373LG5-zs&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>
