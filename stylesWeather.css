@@ -151,3 +151,40 @@ button {
   font-size: 40px;
   margin-bottom: 10px;
 }
+
+
+/* Mobile Design */
+
+@media (max-width: 480px)
+{
+.container 
+  {
+  align-content: center;
+  background: white;
+  color: black;
+  padding: 20px;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  position: relative;
+  z-index: 1;
+  margin: 100px auto 0;
+  margin-top: 225px;
+}
+  
+#nav-icons {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+  aligns-items: center;
+}
+  
+
+
+}
+
+
