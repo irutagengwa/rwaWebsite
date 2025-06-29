@@ -1,209 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="motocycle.png">
-    <title>Rwamoto</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="motocycle.png" />
+  <title>Rwamoto</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <!-- Mobile-only hamburger menu -->
-    <div class="mobile-only hamburger-menu">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
+  <!-- Mobile-only hamburger menu -->
+  <div class="mobile-only hamburger-menu">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+
+  <!-- Mobile-only backdrop -->
+  <div class="menu-backdrop mobile-only"></div>
+
+  <!-- Mobile-only side navigation -->
+  <div class="mobile-only side-nav">
+    <a href="infoPage.html"><img src="info.png" alt="Info" /></a>
+    <a href="Save.html"><img src="diskette2.png" alt="Save" /></a>
+    <a href="weatherPage.html"><img src="cloudy2.png" alt="Weather" /></a>
+  </div>
+
+  <!-- Background Map -->
+  <div id="map"></div>
+
+  <!-- Navigation Icons -->
+  <div id="nav-icons">
+    <a href="infoPage.html"><img src="info.png" alt="Info" /></a>
+    <a href="Save.html"><img src="diskette2.png" alt="Save" /></a>
+    <a href="weatherPage.html"><img src="cloudy2.png" alt="Weather" /></a>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <div class="header">
+      <div class="title">Rwa Moto</div>
+      <a href="index.html" id="home-icon">
+        <img src="motocycle.png" alt="Home" />
+      </a>
     </div>
 
-    <!-- Mobile-only side navigation -->
-    <div class="mobile-only side-nav">
-        <a href="infoPage.html"><img src="info.png" alt="Info"></a>
-        <a href="Save.html"><img src="diskette2.png" alt="Save"></a>
-        <a href="weatherPage.html"><img src="cloudy2.png" alt="Weather"></a>
+    <div class="input-group">
+      <label class="label">From:</label>
+      <div class="input-box">
+        <input type="text" id="starting-location" placeholder="Starting Location" />
+      </div>
     </div>
 
-    <!-- Background Map -->
-    <div id="map"></div>
-
-    <!-- Navigation Icons -->
-    <div id="nav-icons">
-            <a href="infoPage.html"><img src="info.png" alt="Info"></a>
-            <a href="Save.html"><img src="diskette2.png" alt="Save"></a>
-            <a href="weatherPage.html"><img src="cloudy2.png" alt="Weather"></a>
+    <div class="input-group">
+      <label class="label">To:</label>
+      <div class="input-box">
+        <input type="text" id="ending-location" placeholder="Ending Location" />
+      </div>
     </div>
 
-    <!-- Main Container -->
-    <div class="container">
-        <div class="header">
-            <div class="title">Rwa Moto</div>
-            <a href="index.html" id="home-icon">
-                <img src="motocycle.png" alt="Home">
-            </a>
-        </div>
-
-        <div class="input-group">
-            <label class="label">From:</label>
-            <div class="input-box">
-                <input type="text" id="starting-location" placeholder="Starting Location">
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label class="label">To:</label>
-            <div class="input-box">
-                <input type="text" id="ending-location" placeholder="Ending Location">
-            </div>
-        </div>
-
-        <div class="distance-container">
-            <label class="dist">Distance:</label>
-            <span id="distance">0.0 KM</span>
-        </div>
-
-        <!-- Calculate Button -->
-       <button class="button" id="calculate-btn" onclick="window.location.href='Calc.html'">Calculate</button>
+    <div class="distance-container">
+      <label class="dist">Distance:</label>
+      <span id="distance">0.0 KM</span>
     </div>
 
-    <script>
-        let map, autocompleteOrigin, autocompleteDestination;
+    <!-- Calculate Button -->
+    <button class="button" id="calculate-btn">Calculate</button>
+  </div>
 
-        // Initialize the map
-        function initMap() {
-            const rwandaCenter = { lat: -1.9403, lng: 29.8739 }; // Rwanda's center coordinates
+  <script>
+    let map, autocompleteOrigin, autocompleteDestination;
 
-            // Create the map
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: rwandaCenter,
-                zoom: 8,
-                disableDefaultUI: true, // Remove default controls
-            });
+    function initMap() {
+      const rwandaCenter = { lat: -1.9403, lng: 29.8739 };
 
-            // Get input elements with correct IDs
-            const inputOrigin = document.getElementById('starting-location');
-            const inputDestination = document.getElementById('ending-location');
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: rwandaCenter,
+        zoom: 8,
+        disableDefaultUI: true,
+      });
 
-            // Initialize autocomplete for both inputs
-            autocompleteOrigin = new google.maps.places.Autocomplete(inputOrigin, {
-                componentRestrictions: { country: 'rw' }, // Restrict to Rwanda
-                fields: ['place_id', 'geometry', 'name', 'formatted_address']
-            });
-            
-            autocompleteDestination = new google.maps.places.Autocomplete(inputDestination, {
-                componentRestrictions: { country: 'rw' }, // Restrict to Rwanda
-                fields: ['place_id', 'geometry', 'name', 'formatted_address']
-            });
+      const inputOrigin = document.getElementById('starting-location');
+      const inputDestination = document.getElementById('ending-location');
 
-            // Bind the autocomplete to the map bounds
-            autocompleteOrigin.bindTo('bounds', map);
-            autocompleteDestination.bindTo('bounds', map);
+      autocompleteOrigin = new google.maps.places.Autocomplete(inputOrigin, {
+        componentRestrictions: { country: 'rw' },
+        fields: ['place_id', 'geometry', 'name', 'formatted_address']
+      });
 
-            // Add listeners for automatic distance calculation
-            autocompleteOrigin.addListener('place_changed', calculateDistance);
-            autocompleteDestination.addListener('place_changed', calculateDistance);
-            
-            // Also add listeners for manual input changes
-            inputOrigin.addEventListener('input', debounce(calculateDistance, 500));
-            inputDestination.addEventListener('input', debounce(calculateDistance, 500));
-        }
+      autocompleteDestination = new google.maps.places.Autocomplete(inputDestination, {
+        componentRestrictions: { country: 'rw' },
+        fields: ['place_id', 'geometry', 'name', 'formatted_address']
+      });
 
-        // Debounce function to limit API calls
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
+      autocompleteOrigin.bindTo('bounds', map);
+      autocompleteDestination.bindTo('bounds', map);
 
-        // Calculate Distance automatically
-        function calculateDistance() {
-            const origin = document.getElementById('starting-location').value.trim();
-            const destination = document.getElementById('ending-location').value.trim();
+      autocompleteOrigin.addListener('place_changed', calculateDistance);
+      autocompleteDestination.addListener('place_changed', calculateDistance);
 
-            if (origin && destination && origin !== destination) {
-                const service = new google.maps.DistanceMatrixService();
-                service.getDistanceMatrix(
-                    {
-                        origins: [origin],
-                        destinations: [destination],
-                        travelMode: google.maps.TravelMode.DRIVING,
-                        unitSystem: google.maps.UnitSystem.METRIC,
-                        avoidHighways: false,
-                        avoidTolls: false
-                    },
-                    (response, status) => {
-                        if (status === 'OK' && response.rows[0]) {
-                            const element = response.rows[0].elements[0];
-                            if (element.status === 'OK') {
-                                const distanceText = element.distance.text;
-                                document.getElementById('distance').innerText = distanceText;
-                            } else {
-                                document.getElementById('distance').innerText = 'Route not found';
-                            }
-                        } else {
-                            console.error('Error calculating distance: ' + status);
-                            document.getElementById('distance').innerText = 'Error calculating';
-                        }
-                    }
-                );
-            } else if (origin === destination && origin) {
-                document.getElementById('distance').innerText = '0.0 km';
+      inputOrigin.addEventListener('input', debounce(calculateDistance, 500));
+      inputDestination.addEventListener('input', debounce(calculateDistance, 500));
+    }
+
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    function calculateDistance() {
+      const origin = document.getElementById('starting-location').value.trim();
+      const destination = document.getElementById('ending-location').value.trim();
+
+      if (origin && destination && origin !== destination) {
+        const service = new google.maps.DistanceMatrixService();
+        service.getDistanceMatrix(
+          {
+            origins: [origin],
+            destinations: [destination],
+            travelMode: google.maps.TravelMode.DRIVING,
+            unitSystem: google.maps.UnitSystem.METRIC,
+            avoidHighways: false,
+            avoidTolls: false
+          },
+          (response, status) => {
+            if (status === 'OK' && response.rows[0]) {
+              const element = response.rows[0].elements[0];
+              if (element.status === 'OK') {
+                const distanceText = element.distance.text;
+                document.getElementById('distance').innerText = distanceText;
+              } else {
+                document.getElementById('distance').innerText = 'Route not found';
+              }
+            } else {
+              console.error('Error calculating distance: ' + status);
+              document.getElementById('distance').innerText = 'Error calculating';
             }
+          }
+        );
+      } else if (origin === destination && origin) {
+        document.getElementById('distance').innerText = '0.0 km';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const calculateBtn = document.getElementById('calculate-btn');
+      calculateBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const origin = document.getElementById('starting-location').value.trim();
+        const destination = document.getElementById('ending-location').value.trim();
+
+        if (!origin || !destination) {
+          alert('Please enter both starting and ending locations before calculating.');
+          return;
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const calculateBtn = document.getElementById('calculate-btn');
-            calculateBtn.addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent default button behavior
-                
-                // Get what the user actually typed
-                const origin = document.getElementById('starting-location').value.trim();
-                const destination = document.getElementById('ending-location').value.trim();
-                
-                // Check if both fields are filled
-                if (!origin || !destination) {
-                    alert('Please enter both starting and ending locations before calculating.');
-                    return;
-                }
-                
-                // Check if locations are different
-                if (origin === destination) {
-                    alert('Starting and ending locations cannot be the same.');
-                    return;
-                }
-                
-                // Send the user's locations to Calc.html page
-                const url = `Calc.html?from=${encodeURIComponent(origin)}&to=${encodeURIComponent(destination)}`;
-                window.location.href = url;
-            });
-        });
+        if (origin === destination) {
+          alert('Starting and ending locations cannot be the same.');
+          return;
+        }
 
-        // Hamburger menu functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const hamburger = document.querySelector('.hamburger-menu');
-            const sideNav = document.querySelector('.side-nav');
+        const url = `Calc.html?from=${encodeURIComponent(origin)}&to=${encodeURIComponent(destination)}`;
+        window.location.href = url;
+      });
 
-            hamburger.addEventListener('click', function() {
-                hamburger.classList.toggle('active');
-                sideNav.classList.toggle('active');
-            });
+      // Hamburger logic
+      const hamburger = document.querySelector('.hamburger-menu');
+      const sideNav = document.querySelector('.side-nav');
+      const backdrop = document.querySelector('.menu-backdrop');
 
-            // Close menu when clicking outside
-            document.addEventListener('click', function(event) {
-                if (!hamburger.contains(event.target) && !sideNav.contains(event.target)) {
-                    hamburger.classList.remove('active');
-                    sideNav.classList.remove('active');
-                }
-            });
-        });
-    </script>
+      function closeMenu() {
+        hamburger.classList.remove('active');
+        sideNav.classList.remove('active');
+        backdrop.classList.remove('active');
+      }
 
-    <!-- API Code Stuff -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxhIOSwfJxJe7mqIMObnIcc6373LG5-zs&libraries=places&callback=initMap" async defer></script>
+      hamburger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        hamburger.classList.toggle('active');
+        sideNav.classList.toggle('active');
+        backdrop.classList.toggle('active');
+      });
+
+      backdrop.addEventListener('click', closeMenu);
+
+      document.addEventListener('click', function (event) {
+        if (
+          !hamburger.contains(event.target) &&
+          !sideNav.contains(event.target)
+        ) {
+          closeMenu();
+        }
+      });
+    });
+  </script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxhIOSwfJxJe7mqIMObnIcc6373LG5-zs&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>
