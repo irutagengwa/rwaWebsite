@@ -9,6 +9,7 @@
       display: none;
     }
 
+
     #map {
       position: absolute;
       top: 0;
@@ -183,6 +184,80 @@
       background: #645f5f;
       transition: background-color 0.3s ease;
     }
+#starting-location
+{
+width: 100%;
+height: 100%;
+text-align: center;
+color: #249668;
+font-size: 33px;
+font-family: Inter;
+font-weight: 500;
+word-wrap: break-word;
+}
+
+#ending-location
+{
+width: 100%;
+height: 100%;
+text-align: center;
+color: #249668;
+font-size: 33px;
+font-family: Inter;
+font-weight: 500;
+word-wrap: break-word;
+}
+
+
+/* CSS for the location bubbles */
+.LocationWhite 
+{
+  height: 55px;
+  width: 200px;
+  font-size: 32px;
+  font-family: Inter;
+  font-weight: 500;
+  word-wrap: break-word;
+  background:#F8F4F4;
+  border-radius: 70px;
+  border: 1px solid #ccc;
+  padding-left: 30px;
+  display: flex;
+  align-items: center; 
+}
+
+.LocationGreen {
+  height: 55px;
+  width: 200px;
+  font-size: 32px;
+  font-family: Inter;
+  font-weight: 500;
+  background: #249668;
+  color: white;
+  border-radius: 70px;
+  border: 1px solid #000;
+  padding-left: 30px;
+  padding-right: 20px; /* Added right padding for better text spacing */
+  display: flex;
+  align-items: center;
+  margin: 10px auto;
+  cursor: help; /* Shows hand cursor to indicate hover info available */
+  
+  /* Text overflow handling */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  /* Remove word-wrap since we're using nowrap */
+  /* word-wrap: break-word; - commented out */
+}
+
+/* Optional: Add a subtle hover effect */
+.LocationGreen:hover {
+  background: #1e7a56; /* Slightly darker green on hover */
+  transform: scale(1.02); /* Subtle scale effect */
+  transition: all 0.2s ease;
+}
 
     @media (max-width: 768px) {
       .mobile-only {
