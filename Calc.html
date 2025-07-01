@@ -6,57 +6,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="motocycle.png">
     <title>Rwamoto</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="calc.Style.css">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxhIOSwfJxJe7mqIMObnIcc6373LG5-zs&libraries=places&callback=initMap" async defer></script>
 </head>
 <body>
-    <div id="map"></div>
+ <!-- Mobile-only backdrop -->
+  <div class="menu-backdrop mobile-only"></div>
 
-    <!-- Navigation Icons -->
-    <div id="nav-icons">
-        <a href="infoPage.html"><img src="info.png" alt="Info"></a>
-        <a href="Save.html"><img src="diskette2.png" alt="Save"></a>
-        <a href="weatherPage.html"><img src="cloudy2.png" alt="Weather"></a>
-    </div>
-    
-    <!-- Main Container -->
-    <div class="container">
-   <div class="header">
-    <a href="index.html" class="title-link">
-        <div class="title">Rwa Moto</div>
-    </a>
-    <a href="index.html" id="home-icon">
-        <img src="motocycle.png" alt="Home">
-    </a>
+  <!-- Mobile-only side navigation -->
+<div class="mobile-only side-nav">
+  <a href="infoPage.html"><img src="info.png" alt="Info" /><span>Info</span></a>
+  <a href="Save.html"><img src="diskette2.png" alt="Save" /><span>Save</span></a>
+  <a href="weatherPage.html"><img src="cloudy2.png" alt="Weather" /><span>Weather</span></a>
 </div>
 
-      <!-- Moto picture-->
-    <img style="width: 50%; height: 50%; margin-left: auto; margin-right: auto; display: block;" src="motocycle.png" />
+
+  <div id="map"></div>
+
+  <!-- Navigation Icons -->
+  <div id="nav-icons">
+      <a href="infoPage.html"><img src="info.png" alt="Info"></a>
+      <a href="Save.html"><img src="diskette2.png" alt="Save"></a>
+      <a href="weatherPage.html"><img src="cloudy2.png" alt="Weather"></a>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container mobile-drawer-target">
+    <div class="header">
+      <!-- Mobile-only hamburger menu -->
+      <div class="mobile-only hamburger-menu">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="close-x" style="display:none;">&times;</div>
+      </div>
+
+      <a href="index.html" class="title-link">
+          <div class="title">Rwa Moto</div>
+      </a>
+      <a href="index.html" id="home-icon">
+          <img src="motocycle.png" alt="Home">
+      </a>
+    </div>
+
+    <!-- Moto picture-->
+    <img id ="calcMoto" src="motocycle.png"/>
+
+    <!-- Estimated oriced word -->
+
+    <p id ="costText"> Estimated Cost </p>
 
     <!-- Additional information -->
     <div class="Trip-Info" id="trip-info">-------</div>
 
-   <!-- From and To information -->
-<div class="location-pair">
-    <div class="LocationWhite">From:</div>
-    <div class="LocationGreen" id="origin-display">None Selected</div>
-</div>
+    <!-- From and To information -->
+    <div class="location-pair">
+        <div class="LocationWhite">From:</div>
+        <div class="LocationGreen" id="origin-display">None Selected</div>
+    </div>
 
-<div class="location-pair">
-    <div class="LocationWhite">To:</div>
-    <div class="LocationGreen" id="destination-display">None Selected</div>
-</div>
+    <div class="location-pair">
+        <div class="LocationWhite">To:</div>
+        <div class="LocationGreen" id="destination-display">None Selected</div>
+    </div>
 
-<!-- Save and New Location Button -->
-<button class="button" id="save-btn">Save</button>
-<a href="index.html" class="buttonNew" id="new-location-btn">New Location</a>
+    <!-- Save and New Location Button -->
+    <button class="button" id="save-btn">Save</button>
+    <a href="index.html" class="buttonNew" id="new-location-btn">New Location</a>
+  </div>
 
-</div>
+  <!-- Sliding drawer toggle -->
+  <div class="drawer-toggle mobile-only" onclick="toggleDrawer()">
+    ▲
+  </div>
 
+  <!-- Bottom drawer for container content -->
+  <div class="drawer mobile-only" id="drawer">
 
+    <div class="drawer-handle" onclick="toggleDrawer()">
+      <div class="arrow-up">▲</div>
+    </div>
+    <!-- This will hold the .container content when drawer is open -->
+    <div id="drawer-content"></div>
+  </div>
 
-<script>
-let map;
+  <script>
+ // Hamburger logic
+      const hamburger = document.querySelector('.hamburger-menu');
+      const sideNav = document.querySelector('.side-nav');
+      const backdrop = document.querySelector('.menu-backdrop');
+      const closeX = document.querySelector('.hamburger-menu .close-x');
+      const container = document.querySelector('.container');
+      const drawer = document.getElementById('drawer');
+
+      function setMenuPointerEvents(isOpen) {
+        if (container) {
+          if (isOpen) {
+            container.classList.add('menu-open');
+          } else {
+            container.classList.remove('menu-open');
+          }
+        }
+        if (drawer) {
+          if (isOpen) {
+            drawer.classList.add('menu-open');
+          } else {
+            drawer.classList.remove('menu-open');
+          }
+        }
+      }
+
+      function closeMenu() {
+        hamburger.classList.remove('active');
+        sideNav.classList.remove('active');
+        backdrop.classList.remove('active');
+        setMenuPointerEvents(false);
+        if (closeX) closeX.style.display = 'none';
+      }
+
+      hamburger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const isActive = hamburger.classList.toggle('active');
+        sideNav.classList.toggle('active');
+        backdrop.classList.toggle('active');
+        setMenuPointerEvents(isActive);
+        if (closeX) closeX.style.display = isActive ? 'block' : 'none';
+      });
+
+      if (closeX) {
+        closeX.addEventListener('click', function(e) {
+          e.stopPropagation();
+          closeMenu();
+        });
+      }
+
+      backdrop.addEventListener('click', closeMenu);
+
+      document.addEventListener('click', function (event) {
+        if (
+          !hamburger.contains(event.target) &&
+          !sideNav.contains(event.target)
+        ) {
+          closeMenu();
+        }
+      });
+
+    function toggleDrawer() {
+      const drawer = document.getElementById("drawer");
+      const container = document.querySelector(".container");
+      const drawerContent = document.getElementById("drawer-content");
+
+      if (drawer.classList.contains("open")) {
+        drawer.classList.remove("open");
+        // Move content back
+        if (drawerContent.contains(container)) {
+          document.body.insertBefore(container, drawer);
+        }
+      } else {
+        drawer.classList.add("open");
+        // Move container inside drawer
+        drawerContent.appendChild(container);
+      }
+    }
+    let map;
 let currentRouteData = null;
 
 function initMap() {
@@ -269,7 +381,46 @@ window.gm_authFailure = function() {
     console.error('Google Maps API authentication failed');
     alert('Map services are currently unavailable. Please try again later.');
 };
-</script>
+
+// Add this mobile detection function
+function isMobileDevice() {
+    return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+function initMap() {
+    const rwandaCenter = { lat: -1.9403, lng: 29.8739 };
+    
+    // Adjust zoom based on device type
+    const zoomLevel = isMobileDevice() ? 100 : 7; // Higher zoom for mobile
+    
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: rwandaCenter,
+        zoom: zoomLevel,
+        disableDefaultUI: true,
+    });
+    
+    // Optional: Add resize listener to adjust zoom when orientation changes
+    window.addEventListener('resize', function() {
+        const newZoomLevel = isMobileDevice() ? 100 : 7;
+        map.setZoom(newZoomLevel);
+    });
+    
+    displayLocations(); // Your existing function
+}
+
+
+
+  </script>
+
+  <style>
+  /* Ensure side-nav/menu-backdrop are always above container/drawer and clickable */
+  .side-nav, .menu-backdrop {
+    pointer-events: auto !important;
+  }
+  .container.menu-open, .drawer.menu-open {
+    pointer-events: none !important;
+  }
+  </style>
 
 </body>
 </html>
