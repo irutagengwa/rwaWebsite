@@ -616,7 +616,7 @@ word-wrap: break-word
         width: 100vw;
         height: 100vh;
        
-        z-index: 1999;
+        z-index: 2999 !important;
         display: none;
         transition: opacity 0.3s ease;
       }
@@ -629,15 +629,15 @@ word-wrap: break-word
       }
 
      
-     .container {
+    .container {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    height: auto;
+    height: 90%;
     max-width: 389px;
     padding: 20px;
     z-index: 1001;
-      }
+  }
 
       .input-box input {
         font-size: 16px;
@@ -770,23 +770,7 @@ word-wrap: break-word
     padding-bottom: 10px;
     cursor: pointer;
   }
-
-
-}
-  @media (max-width: 375px) {
-  .container {
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    height: 90%;
-    max-width: 389px;
-    padding: 20px;
-    z-index: 1001;
-  }
-  .title {
-    font-size: 28px;
-  }
-  .LocationWhite 
+.LocationWhite 
 {
   height: 35px;
   width: 200px;
@@ -801,8 +785,7 @@ word-wrap: break-word
   display: flex;
   align-items: center; 
 }
-
-.LocationGreen {
+  .LocationGreen {
   height: 35px;
   width: 175px;
   font-size: 32px;
@@ -827,8 +810,7 @@ word-wrap: break-word
   /* Remove word-wrap since we're using nowrap */
   /* word-wrap: break-word; - commented out */
 }
-
-.buttonNew
+  .buttonNew
 {
 width: 100%;
 height: 35px;
@@ -846,15 +828,6 @@ cursor: pointer;
 margin-top: auto;
 text-decoration: none;
 }
-#costText {
-    text-align: center;
-    color: #249668;
-    font-size: 25px;
-    font-family: Inter, sans-serif;
-    font-weight: 500;
-    word-wrap: break-word;
-    margin-top: 20px; /* Add some space above the text */
-}
   .Trip-Info
 {
 width: 100%; 
@@ -866,7 +839,7 @@ font-family: Inter;
 font-weight: 500; 
 word-wrap: break-word
 }
-    .button 
+   .button 
 {
 width: 100%;
 height: 35px;
@@ -888,14 +861,8 @@ text-decoration: none;
   display:none; /* Hide the cost text on small screens */
 }
 
-/* --- FORCE SIDE NAV AND BACKDROP TO TOP --- */
-.side-nav {
-  z-index: 3000 !important;
 }
-.menu-backdrop {
-  z-index: 2999 !important;
-}
-  }
+
 
 
 
