@@ -330,15 +330,7 @@ word-wrap: break-word;
   transition: all 0.2s ease;
 }
 
-/* Responsive design for smaller screens */
-@media (max-width: 768px) {
-  .LocationGreen {
-      width: 180px;
-      font-size: 28px;
-      padding-left: 25px;
-      padding-right: 15px;
-  }
-}
+
 
 @media (max-width: 480px) {
   .LocationGreen {
@@ -631,9 +623,10 @@ word-wrap: break-word
      
     .container {
     left: 50%;
+    top: 300px;
     transform: translate(-50%, -50%);
     width: 90%;
-    height: 90%;
+    height: 95%;
     max-width: 389px;
     padding: 20px;
     z-index: 1001;
@@ -839,7 +832,13 @@ font-family: Inter;
 font-weight: 500; 
 word-wrap: break-word
 }
-   .button 
+
+/* Reduce gap between Trip-Info and first location-pair */
+.Trip-Info + .location-pair {
+  margin-top: 0px;
+}
+
+.button 
 {
 width: 100%;
 height: 40px;
@@ -862,7 +861,6 @@ text-decoration: none;
 }
 
 }
-
 
 
 
