@@ -9,13 +9,6 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Mobile-only hamburger menu -->
-  <div class="mobile-only hamburger-menu">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-  </div>
-
   <!-- Mobile-only backdrop -->
   <div class="menu-backdrop mobile-only"></div>
 
@@ -39,6 +32,14 @@
   <!-- Main Container -->
   <div class="container">
     <div class="header">
+      <!-- Mobile-only hamburger menu -->
+      <div class="mobile-only hamburger-menu">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="close-x" style="display:none;">&times;</div>
+      </div>
+
       <div class="title">Rwa Moto</div>
       <a href="index.html" id="home-icon">
         <img src="motocycle.png" alt="Home" />
@@ -175,19 +176,29 @@
       const hamburger = document.querySelector('.hamburger-menu');
       const sideNav = document.querySelector('.side-nav');
       const backdrop = document.querySelector('.menu-backdrop');
+      const closeX = document.querySelector('.hamburger-menu .close-x');
 
       function closeMenu() {
         hamburger.classList.remove('active');
         sideNav.classList.remove('active');
         backdrop.classList.remove('active');
+        if (closeX) closeX.style.display = 'none';
       }
 
       hamburger.addEventListener('click', function (e) {
         e.stopPropagation();
-        hamburger.classList.toggle('active');
+        const isActive = hamburger.classList.toggle('active');
         sideNav.classList.toggle('active');
         backdrop.classList.toggle('active');
+        if (closeX) closeX.style.display = isActive ? 'block' : 'none';
       });
+
+      if (closeX) {
+        closeX.addEventListener('click', function(e) {
+          e.stopPropagation();
+          closeMenu();
+        });
+      }
 
       backdrop.addEventListener('click', closeMenu);
 
