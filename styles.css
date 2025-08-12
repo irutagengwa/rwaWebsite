@@ -64,25 +64,29 @@ position: relative;
 }
 
 /* Main Container */
-.container 
-{
-position: fixed;
-left: 50px;  /* Adjust this value to position the container */
-top: 50%;
-transform: translateY(-50%);
-width: 389px;
-min-height: 600px;
-background: rgba(255, 255, 255, 0.8);
-backdrop-filter: blur(8px);
--webkit-backdrop-filter: blur(8px);
-border-radius: 60px;
-box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-padding: 30px;
-display: flex;
-flex-direction: column;
-gap: 25px;
-z-index: 2;
+.container {
+  position: fixed;
+  left: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 90vw; 
+  max-width: 389px;
+  /* min-height: auto;
+  max-height: 90vh;  */
+ height: auto;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 60px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  z-index: 2;
 }
+
 
 .header 
 {
@@ -315,24 +319,7 @@ word-wrap: break-word;
   transition: all 0.2s ease;
 }
 
-/* Responsive design for smaller screens */
-@media (max-width: 768px) {
-  .LocationGreen {
-      width: 180px;
-      font-size: 28px;
-      padding-left: 25px;
-      padding-right: 15px;
-  }
-}
 
-@media (max-width: 480px) {
-  .LocationGreen {
-      width: 150px;
-      font-size: 24px;
-      padding-left: 20px;
-      padding-right: 10px;
-  }
-}
 
 
 
@@ -513,7 +500,18 @@ word-wrap: break-word
       font-size: 16px;
       padding: 6px 12px;
   }
-  
+  .container {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(90vw, 320px);
+    height: auto;
+  }
+  .LocationGreen {
+      width: 150px;
+      font-size: 24px;
+      padding-left: 20px;
+      padding-right: 10px;
+  }
 }
 
 /* Route info overlay styles - NEW */
@@ -548,6 +546,14 @@ word-wrap: break-word
   border-top: 8px solid white;
 }
 @media (max-width: 768px) {
+  .LocationGreen 
+  {
+      width: 180px;
+      font-size: 28px;
+      padding-left: 25px;
+      padding-right: 15px;
+  }
+
       .mobile-only {
         display: block;
       }
@@ -617,8 +623,8 @@ word-wrap: break-word
      .container {
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 389px;
+    height: auto;
+    width: min(85vw, 350px);
     padding: 20px;
     z-index: 2; 
       }
@@ -757,4 +763,14 @@ word-wrap: break-word
     font-size: 24px;
     color: #249668;
   }
+
+}
+@media (max-width: 1024px) {
+  .container {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(90vw, 389px);
+    height: auto;
+  }
+
 }
